@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm';
+import { Transaction } from 'src/transaction/transaction.entity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  Index,
+  OneToMany,
+} from 'typeorm';
 
 @Entity()
 @Index(['userId'], { unique: true })
@@ -14,4 +21,7 @@ export class Wallet {
 
   @Column({ default: 0 })
   version: number;
+
+  @OneToMany(() => Transaction, (transaction) => transaction.wallet)
+  transactions: Transaction[];
 }

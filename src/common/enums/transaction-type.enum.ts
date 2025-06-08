@@ -1,0 +1,5 @@
+export enum TransactionType {
+  WALLET_FUNDING = 'WALLET_FUNDING',
+  BILL_PAYMENT = 'BILL_PAYMENT',
+  REVERSAL = 'REVERSAL',
+}
