@@ -1,13 +1,17 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Wallet } from 'src/wallet/wallet.entity';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger as WinstonLogger } from 'winston';
 
 @Injectable()
 export class WalletService {
   constructor(
     @InjectRepository(Wallet)
     private readonly walletRepository: Repository<Wallet>,
+    @Inject(WINSTON_MODULE_PROVIDER)
+    private readonly winstonLogger: WinstonLogger,
   ) {}
 
   async createWallet(userId: string): Promise<Wallet> {
@@ -28,18 +32,18 @@ export class WalletService {
 
       const savedWallet = await this.walletRepository.save(wallet);
 
-      //   this.winstonLogger.info('Wallet created successfully', {
-      //     walletId: savedWallet.id,
-      //     userId,
-      //   });
+      this.winstonLogger.info('Wallet created successfully', {
+        walletId: savedWallet.id,
+        userId,
+      });
       console.log(savedWallet, 'Wallet created successfully');
 
       return savedWallet;
     } catch (error) {
-      //   this.winstonLogger.error('Failed to create wallet', {
-      //     userId,
-      //     error: error.message,
-      //   });
+      this.winstonLogger.error('Failed to create wallet', {
+        userId,
+        error: error.message,
+      });
       throw error;
     }
   }

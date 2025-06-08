@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -11,6 +12,8 @@ import * as bcrypt from 'bcryptjs';
 import { RegisterDto } from './dtos/register.dto';
 import { LoginDto } from './dtos/login.dto';
 import { WalletService } from 'src/wallet/wallet.service';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger as WinstonLogger } from 'winston';
 
 @Injectable()
 export class AuthService {
@@ -19,6 +22,8 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
     private readonly walletService: WalletService, // Assuming you have a Wallet entity
     private readonly jwtService: JwtService,
+    @Inject(WINSTON_MODULE_PROVIDER)
+    private readonly winstonLogger: WinstonLogger,
   ) {}
 
   async register(registerDto: RegisterDto) {
@@ -39,10 +44,10 @@ export class AuthService {
 
     // Create a wallet for the user
     await this.walletService.createWallet(savedUser.id);
-    //   this.winstonLogger.info('User registered successfully', {
-    //     userId: savedUser.id,
-    //     email: savedUser.email,
-    //   });
+    this.winstonLogger.info('User registered successfully', {
+      userId: savedUser.id,
+      email: savedUser.email,
+    });
 
     const payload = { email: savedUser.email, sub: savedUser.id };
     return {
