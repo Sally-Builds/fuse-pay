@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { WalletModule } from './wallet/wallet.module';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
+import { BillModule } from './bill/bill.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import * as winston from 'winston';
     }),
     AuthModule,
     WalletModule,
+    BillModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -15,7 +15,7 @@ export class TransactionService {
 
   constructor(
     @InjectRepository(Transaction)
-    private transactionRepository: Repository<Transaction>,
+    public transactionRepository: Repository<Transaction>,
     // private eventEmitter: EventEmitter2,
     @Inject(WINSTON_MODULE_PROVIDER)
     private readonly winstonLogger: WinstonLogger,
