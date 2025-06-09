@@ -7,6 +7,9 @@ import { WalletModule } from './wallet/wallet.module';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import { BillModule } from './bill/bill.module';
+import { BullModule } from '@nestjs/bull';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { QueueModule } from './queue/queue.module';
 
 @Module({
   imports: [
@@ -43,9 +46,20 @@ import { BillModule } from './bill/bill.module';
         }),
       ],
     }),
+    // Redis/Bull configuration for queues
+    BullModule.forRoot({
+      redis: {
+        host: '127.0.0.1',
+        port: 6379,
+      },
+    }),
+
+    // Event emitter for async processing
+    EventEmitterModule.forRoot(),
     AuthModule,
     WalletModule,
     BillModule,
+    QueueModule,
   ],
   controllers: [AppController],
   providers: [AppService],

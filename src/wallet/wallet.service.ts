@@ -193,15 +193,15 @@ export class WalletService {
       }
 
       // Create debit transaction
-      await this.transactionService.createTransaction(
-        {
-          walletId: wallet.id,
-          amount: -amount,
-          type: TransactionType.BILL_PAYMENT,
-          reference,
-        },
-        queryRunner,
-      );
+      // await this.transactionService.createTransaction(
+      //   {
+      //     walletId: wallet.id,
+      //     amount: -amount,
+      //     type: TransactionType.BILL_PAYMENT,
+      //     reference,
+      //   },
+      //   queryRunner,
+      // );
 
       const updatedWallet = await repository.findOne({
         where: { id: wallet.id },

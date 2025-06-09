@@ -7,7 +7,7 @@ import {
 import { DataSource, QueryRunner } from 'typeorm';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
-// import { EventEmitter2 } from '@nestjs/event-emitter';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger as WinstonLogger } from 'winston';
 import { v4 as uuidv4 } from 'uuid';
@@ -29,7 +29,7 @@ export class BillService {
     private transactionService: TransactionService,
     private externalBillApiService: ExternalBillApiService,
     @InjectQueue('bill-processing') private billQueue: Queue,
-    // private eventEmitter: EventEmitter2,
+    private eventEmitter: EventEmitter2,
     @Inject(WINSTON_MODULE_PROVIDER)
     private readonly winstonLogger: WinstonLogger,
   ) {}
@@ -88,25 +88,25 @@ export class BillService {
       });
 
       // Queue bill processing job
-      //   await this.billQueue.add(
-      //     'process-bill-payment',
-      //     {
-      //       transactionId: transaction.id,
-      //       billPaymentRequest: {
-      //         billType,
-      //         amount,
-      //         customerReference,
-      //         metadata,
-      //       },
-      //     },
-      //     {
-      //       attempts: 3,
-      //       backoff: {
-      //         type: 'exponential',
-      //         delay: 2000,
-      //       },
-      //     },
-      //   );
+      await this.billQueue.add(
+        'process-bill-payment',
+        {
+          transactionId: transaction.id,
+          billPaymentRequest: {
+            billType,
+            amount,
+            customerReference,
+            metadata,
+          },
+        },
+        {
+          attempts: 3,
+          backoff: {
+            type: 'exponential',
+            delay: 2000,
+          },
+        },
+      );
 
       return {
         transactionId: transaction.id,
@@ -167,11 +167,11 @@ export class BillService {
         });
 
         // Emit success event
-        // this.eventEmitter.emit('bill.payment.success', {
-        //   transactionId,
-        //   externalTransactionId: response.transactionId,
-        //   data: response.data,
-        // });
+        this.eventEmitter.emit('bill.payment.success', {
+          transactionId,
+          externalTransactionId: response.transactionId,
+          data: response.data,
+        });
       } else {
         // Failure - update transaction and trigger reversal
         await this.transactionService.updateTransactionStatus(
@@ -187,10 +187,10 @@ export class BillService {
         });
 
         // Emit failure event to trigger reversal
-        // this.eventEmitter.emit('bill.payment.failed', {
-        //   transactionId,
-        //   reason: response.message,
-        // });
+        this.eventEmitter.emit('bill.payment.failed', {
+          transactionId,
+          reason: response.message,
+        });
       }
 
       return response;
@@ -209,10 +209,10 @@ export class BillService {
       );
 
       // Emit failure event
-      //   this.eventEmitter.emit('bill.payment.failed', {
-      //     transactionId,
-      //     reason: error.message,
-      //   });
+      this.eventEmitter.emit('bill.payment.failed', {
+        transactionId,
+        reason: error.message,
+      });
 
       throw error;
     }
