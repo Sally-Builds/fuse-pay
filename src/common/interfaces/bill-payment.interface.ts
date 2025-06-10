@@ -1,5 +1,7 @@
+import { BillType } from '../enums/bill-type.enum';
+
 export interface BillPaymentRequest {
-  billType: string;
+  billType: BillType;
   amount: number;
   customerReference: string;
   metadata?: Record<string, any>;

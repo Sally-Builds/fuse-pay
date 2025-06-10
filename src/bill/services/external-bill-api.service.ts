@@ -15,7 +15,7 @@ export class ExternalBillApiService {
     return new Promise((resolve) => {
       setTimeout(
         () => {
-          const isSuccess = Math.random() > 0.2; // 80% success rate
+          const isSuccess = Math.random() > 0.8; // 80% success rate
 
           if (isSuccess) {
             resolve({

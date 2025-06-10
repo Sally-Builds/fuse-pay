@@ -8,11 +8,11 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryRunner, Repository } from 'typeorm';
-import { Wallet } from 'src/wallet/wallet.entity';
+import { Wallet } from './wallet.entity';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger as WinstonLogger } from 'winston';
-import { TransactionService } from 'src/transaction/transaction.service';
-import { TransactionType } from 'src/common/enums/transaction-type.enum';
+import { TransactionService } from '../transaction/transaction.service';
+import { TransactionType } from '../common/enums/transaction-type.enum';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()

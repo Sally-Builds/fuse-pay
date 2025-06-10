@@ -1,6 +1,6 @@
-import { TransactionStatus } from 'src/common/enums/transaction-status.enum';
-import { TransactionType } from 'src/common/enums/transaction-type.enum';
-import { Wallet } from 'src/wallet/wallet.entity';
+import { TransactionStatus } from '../common/enums/transaction-status.enum';
+import { TransactionType } from '../common/enums/transaction-type.enum';
+import { Wallet } from '../wallet/wallet.entity';
 import {
   Entity,
   Column,

@@ -8,7 +8,7 @@ import { Logger as WinstonLogger } from 'winston';
 import { Transaction } from './transaction.entity';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { TransactionStatus } from '../common/enums/transaction-status.enum';
-import { WalletService } from 'src/wallet/wallet.service';
+import { WalletService } from '../wallet/wallet.service';
 
 @Injectable()
 export class TransactionService {
