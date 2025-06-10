@@ -4,6 +4,7 @@ import {
   Inject,
   Injectable,
   NotFoundException,
+  forwardRef,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryRunner, Repository } from 'typeorm';
@@ -21,6 +22,7 @@ export class WalletService {
     private readonly walletRepository: Repository<Wallet>,
     @Inject(WINSTON_MODULE_PROVIDER)
     private readonly winstonLogger: WinstonLogger,
+    @Inject(forwardRef(() => TransactionService))
     private transactionService: TransactionService,
   ) {}
 
