@@ -1,13 +1,14 @@
-import { Injectable, Inject, Logger } from '@nestjs/common';
+import { Injectable, Inject, Logger, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, QueryRunner } from 'typeorm';
-// import { EventEmitter2 } from '@nestjs/event-emitter';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger as WinstonLogger } from 'winston';
 
 import { Transaction } from './transaction.entity';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { TransactionStatus } from '../common/enums/transaction-status.enum';
+import { WalletService } from 'src/wallet/wallet.service';
 
 @Injectable()
 export class TransactionService {
@@ -16,9 +17,11 @@ export class TransactionService {
   constructor(
     @InjectRepository(Transaction)
     public transactionRepository: Repository<Transaction>,
-    // private eventEmitter: EventEmitter2,
+    private eventEmitter: EventEmitter2,
     @Inject(WINSTON_MODULE_PROVIDER)
     private readonly winstonLogger: WinstonLogger,
+    @Inject(forwardRef(() => WalletService))
+    private readonly walletService: WalletService,
   ) {}
 
   async createTransaction(
@@ -78,12 +81,12 @@ export class TransactionService {
         externalReference,
       });
       // Emit event for failed transactions
-      //   if (status === TransactionStatus.FAILED) {
-      //     this.eventEmitter.emit('transaction.failed', {
-      //       transactionId,
-      //       transaction: updatedTransaction,
-      //     });
-      //   }
+      if (status === TransactionStatus.FAILED) {
+        this.eventEmitter.emit('transaction.failed', {
+          transactionId,
+          transaction: updatedTransaction,
+        });
+      }
       if (!updatedTransaction) {
         throw new Error('Transaction not found');
       }
@@ -101,6 +104,15 @@ export class TransactionService {
   async getTransactionsByWalletId(walletId: string): Promise<Transaction[]> {
     return this.transactionRepository.find({
       where: { walletId, isDeleted: false },
+      order: { createdAt: 'DESC' },
+    });
+  }
+
+  async getTransactionsByUserId(userId: string): Promise<Transaction[]> {
+    const wallet = await this.walletService.getWalletByUserId(userId);
+
+    return this.transactionRepository.find({
+      where: { walletId: wallet.id, isDeleted: false },
       order: { createdAt: 'DESC' },
     });
   }
