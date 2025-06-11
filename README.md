@@ -1,98 +1,244 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# FusePay
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+FusePay is a robust bill payment and wallet management system built with NestJS. It provides secure user authentication, wallet management, and bill payment processing with automatic reversals for failed transactions.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Architecture
 
-## Description
+### Core Modules
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+1. **Auth Module**
 
-## Project setup
+   - Handles user registration and authentication
+   - JWT-based authentication
+   - User management
 
-```bash
-$ npm install
-```
+2. **Wallet Module**
 
-## Compile and run the project
+   - Digital wallet management
+   - Balance tracking
+   - Fund operations (credit/debit)
+   - Optimistic locking for concurrent operations
 
-```bash
-# development
-$ npm run start
+3. **Bill Module**
 
-# watch mode
-$ npm run start:dev
+   - Bill payment processing
+   - External payment service integration
+   - Transaction status management
 
-# production mode
-$ npm run start:prod
-```
+4. **Queue Module**
 
-## Run tests
+   - Asynchronous bill processing
+   - Transaction reversal handling
+   - Job retry mechanisms
 
-```bash
-# unit tests
-$ npm run test
+5. **Transaction Module**
+   - Transaction record keeping
+   - Status tracking
+   - History management
 
-# e2e tests
-$ npm run test:e2e
+### Technology Stack
 
-# test coverage
-$ npm run test:cov
-```
+- Framework: NestJS
+- Database: SQLite with TypeORM
+- Queue System: Bull (Redis-based)
+- Authentication: JWT
+- Logging: Winston
+- API Documentation: Swagger/OpenAPI
 
-## Deployment
+## Setup Instructions
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+1. **Clone the Repository**
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+   ```bash
+   git clone <repository-url>
+   cd fuse-pay
+   ```
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+2. **Install Dependencies**
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+   ```bash
+   npm install
+   ```
 
-## Resources
+3. **Environment Setup**
+   Create a .env file in the root directory:
 
-Check out a few resources that may come in handy when working with NestJS:
+   ```env
+   DB_NAME=bill_vending.db
+   JWT_SECRET=your-secret-key
+   PORT=3000
+   ```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+4. **Run the Application**
 
-## Support
+   ```bash
+   # Development
+   npm run start:dev
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+   # Production
+   npm run build
+   npm run start:prod
+   ```
 
-## Stay in touch
+## Security Features
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+1. **JWT Authentication**
 
-## License
+   - Secure token-based authentication
+   - Protected routes with Guards
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+2. **Transaction Safety**
+
+   - Database transactions for atomic operations
+   - Optimistic locking for concurrent updates
+   - Automatic reversals for failed transactions
+
+3. **Data Validation**
+   - DTO-based request validation
+   - Strong typing with TypeScript
+
+## Error Handling
+
+The system implements comprehensive error handling:
+
+- Input validation errors
+- Insufficient funds errors
+- Concurrent transaction conflicts
+- External service failures
+- Transaction reversals
+
+## Logging
+
+Winston-based logging system with:
+
+- Error tracking
+- Transaction monitoring
+- Payment processing logs
+- Reversal tracking
+
+## System Design: Transaction Safety and Concurrency
+
+### Asynchronous Rollback Process
+
+The system implements a robust asynchronous rollback mechanism using an event-driven architecture:
+
+1. **Event Emission**
+
+   - When a bill payment fails, the `BillService` emits a `bill.payment.failed` event
+   - Event includes transaction ID and failure reason
+
+   ```typescript
+   this.eventEmitter.emit('bill.payment.failed', {
+     transactionId,
+     reason: response.message,
+   });
+   ```
+
+2. **Queue-Based Processing**
+
+   - `BillPaymentListener` catches the failure event and queues a reversal
+   - Uses Bull Queue for reliable processing
+   - Implements exponential backoff for retry attempts
+
+   ```typescript
+   await this.billQueue.add(
+     'process-reversal',
+     {
+       transactionId,
+       reason,
+     },
+     {
+       delay: 5000, // 5 second initial delay
+       attempts: 5,
+       backoff: {
+         type: 'exponential',
+         delay: 3000,
+       },
+     },
+   );
+   ```
+
+3. **Reversal Processing**
+   - `ReversalProcessingProcessor` handles the actual reversal
+   - Uses database transactions for atomicity
+   - Updates transaction status and credits wallet
+   - Maintains detailed logs for audit trail
+
+### Race Condition Prevention
+
+The system employs multiple strategies to handle concurrent transactions safely:
+
+1. **Optimistic Locking**
+
+   - Uses version control in the Wallet entity
+   - Prevents outdated balance updates
+
+   ```typescript
+   @Column({ default: 0 })
+   version: number;
+   ```
+
+2. **Atomic Updates**
+
+   - SQL-level balance updates with version check
+
+   ```typescript
+   await repository
+     .createQueryBuilder()
+     .update(Wallet)
+     .set({
+       balance: () => `balance + ${amount}`,
+       version: () => 'version + 1',
+     })
+     .where('id = :id AND version = :version', {
+       id: wallet.id,
+       version: wallet.version,
+     })
+     .execute();
+   ```
+
+3. **Database Transactions**
+
+   - Ensures all operations within a transaction are atomic
+   - Uses TypeORM QueryRunner for transaction management
+
+   ```typescript
+   queryRunner = this.dataSource.createQueryRunner();
+   await queryRunner.connect();
+   await queryRunner.startTransaction();
+   ```
+
+4. **Balance Verification**
+   - Pre-transaction balance checks
+   - Double verification during debit operations
+   ```typescript
+   if (wallet.balance < amount) {
+     throw new BadRequestException('Insufficient funds');
+   }
+   ```
+
+### System Reliability
+
+1. **Guaranteed Processing**
+
+   - Bull Queue ensures job persistence
+   - Automatic retries for failed operations
+   - Dead letter queues for failed jobs
+
+2. **Transaction Monitoring**
+
+   - Comprehensive logging at each step
+   - Transaction status tracking
+   - Audit trail maintenance
+
+3. **Failure Recovery**
+   - Automatic rollback of failed transactions
+   - Event-driven reversal process
+   - Multiple retry attempts with exponential backoff
+
+This design ensures that:
+
+- No funds are lost during failed transactions
+- Concurrent operations are handled safely
+- System remains consistent even during failures
+- Operations are traceable and auditable
