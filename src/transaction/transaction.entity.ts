@@ -1,11 +1,11 @@
 import { TransactionStatus } from '../common/enums/transaction-status.enum';
 import { TransactionType } from '../common/enums/transaction-type.enum';
-import { Wallet } from '../wallet/wallet.entity';
+// import { Wallet } from '../wallet/wallet.entity';
 import {
   Entity,
   Column,
-  ManyToOne,
-  JoinColumn,
+  // ManyToOne,
+  // JoinColumn,
   Index,
   PrimaryGeneratedColumn,
   CreateDateColumn,
@@ -62,7 +62,7 @@ export class Transaction {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Wallet, (wallet) => wallet.transactions)
-  @JoinColumn({ name: 'walletId' })
-  wallet: Wallet;
+  // @ManyToOne(() => Wallet, (wallet) => wallet.transactions)
+  // @JoinColumn({ name: 'walletId' })
+  // wallet: Wallet;
 }

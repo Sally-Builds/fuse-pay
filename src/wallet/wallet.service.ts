@@ -28,19 +28,24 @@ export class WalletService {
 
   async createWallet(userId: string): Promise<Wallet> {
     try {
-      const existingWallet = await this.walletRepository.findOne({
-        where: { userId },
-      });
+      // const existingWallet = await this.walletRepository.findOne({
+      //   where: { userId },
+      // });
 
-      if (existingWallet) {
-        throw new ConflictException('Wallet already exists for this user');
+      // if (existingWallet) {
+      //   throw new ConflictException('Wallet already exists for this user');
+      // }
+      let wallet: Wallet;
+
+      try {
+        wallet = await this.getWalletByUserId(userId);
+      } catch (error) {
+        if (error instanceof ConflictException) {
+          wallet = await this.createWallet(userId);
+        } else {
+          throw error;
+        }
       }
-
-      const wallet = this.walletRepository.create({
-        userId,
-        balance: 0,
-        version: 0,
-      });
 
       const savedWallet = await this.walletRepository.save(wallet);
 

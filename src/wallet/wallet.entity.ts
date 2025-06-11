@@ -1,10 +1,10 @@
-import { Transaction } from '../transaction/transaction.entity';
+// import { Transaction } from '../transaction/transaction.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   Index,
-  OneToMany,
+  // OneToMany,
 } from 'typeorm';
 
 @Entity()
@@ -22,6 +22,6 @@ export class Wallet {
   @Column({ default: 0 })
   version: number;
 
-  @OneToMany(() => Transaction, (transaction) => transaction.wallet)
-  transactions: Transaction[];
+  // @OneToMany(() => Transaction, (transaction) => transaction.wallet)
+  // transactions: Transaction[];
 }
